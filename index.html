@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gadget Nexus - Premium Laptops & Tech</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/images/logo.png" alt="Gadget Nexus" class="logo">
+                <span class="brand-name">Gadget Nexus</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="products.html" class="nav-link">Products</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title fly-in">Premium Laptops<br>Unbeatable Prices</h1>
+                <p class="hero-subtitle slide-up">The Home of Technology - Quality refurbished laptops starting from <strong class="gold-text">R2000</strong></p>
+                <div class="hero-buttons">
+                    <a href="products.html" class="btn btn-primary pulse-glow">
+                        <i class="fas fa-shopping-bag"></i>
+                        Shop Now
+                    </a>
+                    <a href="contact.html" class="btn btn-secondary">
+                        <i class="fas fa-quote-right"></i>
+                        Get Quote
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-laptop scale-in">
+                    <img src="assets/images/laptops/dell-xps-13.jpg" alt="Premium Laptop">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title fly-in">Featured Laptops</h2>
+            <p class="section-subtitle slide-up">Carefully tested and certified for optimal performance</p>
+            
+            <div class="products-grid">
+                <div class="product-card slide-up">
+                    <div class="product-image">
+                        <img src="assets/images/laptops/dell-xps-13.jpg" alt="Dell XPS 13">
+                    </div>
+                    <div class="product-info">
+                        <h3>Dell XPS 13</h3>
+                        <p class="product-specs">Intel i7 • 16GB RAM • 512GB SSD</p>
+                        <div class="product-price">R8,499</div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary add-to-cart" data-product="Dell XPS 13" data-price="8499">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-outline info-btn" data-product="dell-xps">
+                                <i class="fas fa-info-circle"></i> Info
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card slide-up">
+                    <div class="product-image">
+                        <img src="assets/images/laptops/macbook-pro-16.jpg" alt="MacBook Pro 16">
+                    </div>
+                    <div class="product-info">
+                        <h3>MacBook Pro 16"</h3>
+                        <p class="product-specs">M1 Pro • 16GB RAM • 1TB SSD</p>
+                        <div class="product-price">R15,999</div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary add-to-cart" data-product="MacBook Pro 16" data-price="15999">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-outline info-btn" data-product="macbook-pro">
+                                <i class="fas fa-info-circle"></i> Info
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card slide-up">
+                    <div class="product-image">
+                        <img src="assets/images/laptops/hp-spectre-x360.jpg" alt="HP Spectre x360">
+                    </div>
+                    <div class="product-info">
+                        <h3>HP Spectre x360</h3>
+                        <p class="product-specs">Intel i5 • 8GB RAM • 256GB SSD</p>
+                        <div class="product-price">R6,299</div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary add-to-cart" data-product="HP Spectre x360" data-price="6299">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-outline info-btn" data-product="hp-spectre">
+                                <i class="fas fa-info-circle"></i> Info
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card slide-in-left">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>30-Day Warranty</h3>
+                    <p>All laptops come with comprehensive warranty coverage and support</p>
+                </div>
+                <div class="feature-card slide-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Expert Testing</h3>
+                    <p>Each device undergoes 50+ point quality inspection</p>
+                </div>
+                <div class="feature-card slide-in-right">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Performance Ready</h3>
+                    <p>Optimized and ready for immediate professional use</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Watermark -->
+    <div class="watermark">Created by <strong>Mahlatsi Mashifane</strong> — <a class="wm-phone" href="tel:0812668996">081 266 8996</a></div>
+
+    <!-- Shopping Cart -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                Total: R<span id="cartTotal">0</span>
+            </div>
+            <button class="btn btn-primary" id="getQuoteBtn">
+                <i class="fas fa-paper-plane"></i>
+                Get Quote
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modalContent">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
