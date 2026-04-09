@@ -1,20 +1,17 @@
 // Main JavaScript functionality for Gadget Nexus
 class GadgetNexus {
     constructor() {
-        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
         this.products = this.getProducts();
         this.init();
     }
 
     init() {
         this.initTheme();
-        this.initCart();
         this.initProducts();
         this.initServices();
         this.initContactForm();
         this.initAnimations();
         this.initStats();
-        this.initWatermark();
     }
 
     // Stats counters (About page)
@@ -57,20 +54,6 @@ class GadgetNexus {
         requestAnimationFrame(tick);
     }
 
-    // Watermark avatar upload and persistence
-    initWatermark() {
-        // Ensure watermark text includes phone number on pages
-        try {
-            document.querySelectorAll('.watermark').forEach(wm => {
-                // If watermark already contains a phone link, skip
-                if (wm.querySelector('.wm-phone')) return;
-                wm.innerHTML = `Created by <strong>Mahlatsi Mashifane</strong> — <a class="wm-phone" href="tel:0812668996">081 266 8996</a>`;
-            });
-        } catch (err) {
-            // Non-fatal
-        }
-    }
-
     // Theme Management
     initTheme() {
         const themeToggle = document.getElementById('themeToggle');
@@ -100,103 +83,16 @@ class GadgetNexus {
         }
     }
 
-    // Cart Management
-    initCart() {
-        const cartIcon = document.getElementById('cartIcon');
-        const cartSidebar = document.getElementById('cartSidebar');
-        const closeCart = document.getElementById('closeCart');
-        const getQuoteBtn = document.getElementById('getQuoteBtn');
-
-        if (cartIcon && cartSidebar) {
-            cartIcon.addEventListener('click', () => this.toggleCart());
-        }
-
-        if (closeCart) {
-            closeCart.addEventListener('click', () => this.toggleCart());
-        }
-
-        if (getQuoteBtn) {
-            getQuoteBtn.addEventListener('click', () => this.sendQuoteRequest());
-        }
-
-        this.updateCartCount();
-    }
-
-    toggleCart() {
-        const cartSidebar = document.getElementById('cartSidebar');
-        if (cartSidebar) {
-            cartSidebar.classList.toggle('active');
-            this.updateCartDisplay();
-        }
-    }
-
-    updateCartCount() {
-        const count = this.cart.reduce((total, item) => total + item.quantity, 0);
-        const cartCountElements = document.querySelectorAll('.cart-count');
-        cartCountElements.forEach(element => {
-            element.textContent = count;
-        });
-    }
-
-    updateCartDisplay() {
-        const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
-        
-        if (!cartItems || !cartTotal) return;
-
-        cartItems.innerHTML = '';
-        let total = 0;
-
-        this.cart.forEach((item, index) => {
-            total += item.price * item.quantity;
-            const cartItem = document.createElement('div');
-            cartItem.className = 'cart-item';
-            cartItem.innerHTML = `
-                <div class="cart-item-info">
-                    <h4>${item.name}</h4>
-                    <p>R${item.price} x ${item.quantity}</p>
-                </div>
-                <button class="remove-item" onclick="gadgetNexus.removeFromCart(${index})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            cartItems.appendChild(cartItem);
-        });
-
-        if (cartTotal) {
-            cartTotal.textContent = total;
-        }
-        
-        this.updateCartCount();
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-    }
-
-    addToCart(productName, productPrice) {
-        const existingItem = this.cart.find(item => item.name === productName);
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            this.cart.push({
-                name: productName,
-                price: parseInt(productPrice),
-                quantity: 1
-            });
-        }
-        
-        this.updateCartDisplay();
-        this.showNotification(`${productName} added to cart!`);
-    }
-
-    removeFromCart(index) {
-        this.cart.splice(index, 1);
-        this.updateCartDisplay();
-        this.showNotification('Item removed from cart');
+    redirectToWhatsApp(productName) {
+        const message = encodeURIComponent(`Hi, I'm interested in the ${productName}. Can you provide a custom quote including delivery options?`);
+        const whatsappUrl = `https://wa.me/27812668996?text=${message}`;
+        window.open(whatsappUrl, '_blank');
     }
 
     // Products Management
     initProducts() {
         this.loadProducts();
+        this.attachProductEvents();
         this.initProductFilters();
         this.initProductModals();
     }
@@ -204,94 +100,179 @@ class GadgetNexus {
     getProducts() {
         return [
             {
-                id: 'dell-xps-13',
-                name: 'Dell XPS 13',
-                price: 8499,
-                image: 'assets/images/laptops/dell-xps-13.jpg',
-                specs: 'Intel Core i7-1165G7 • 16GB RAM • 512GB SSD • 13.4" FHD+ • Windows 11 Pro',
-                condition: 'Excellent - Minor cosmetic wear, fully tested',
-                features: ['Thunderbolt 4', 'Backlit Keyboard', 'Fingerprint Reader', 'Wi-Fi 6']
+                id: 'dell-vostro-core-i5-gaming',
+                name: 'Dell Vostro Core i5 Gaming',
+                price: 3799,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.07 (1).jpeg',
+                specs: 'Intel Core i5 • 8GB RAM • Nvidia GeForce GTX 1650 • 15.6" FHD • 512GB SSD',
+                condition: 'Excellent condition',
+                features: ['Gaming Performance', 'Reliable Build', 'Great Value', 'Backlit Keyboard', 'Fast SSD Storage'],
+                detailedSpecs: {
+                    processor: 'Intel Core i5-10300H (10th Gen)',
+                    ram: '8GB DDR4',
+                    storage: '512GB SSD',
+                    graphics: 'NVIDIA GeForce GTX 1650 4GB',
+                    display: '15.6" FHD (1920x1080) Anti-Glare',
+                    os: 'Windows 11 Home',
+                    battery: '3-cell, 42Wh',
+                    weight: '2.3 kg',
+                    ports: 'USB 3.1, HDMI, USB-C, SD Card Reader',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'GamingFan92', rating: 5, comment: 'Great for casual gaming and work!' },
+                    { user: 'TechStudent', rating: 4, comment: 'Solid performance for the price.' }
+                ]
             },
             {
-                id: 'macbook-pro-16',
-                name: 'MacBook Pro 16"',
-                price: 15999,
-                image: 'assets/images/laptops/macbook-pro-16.jpg',
-                specs: 'Apple M1 Pro • 16GB RAM • 1TB SSD • 16" Liquid Retina • macOS',
-                condition: 'Like New - Minimal usage, battery health 95%',
-                features: ['M1 Pro Chip', 'Liquid Retina XDR', 'Magic Keyboard', 'Touch ID']
+                id: 'dell-inspiron-core-i5',
+                name: 'Dell Inspiron Core i5',
+                price: 3299,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.07.jpeg',
+                specs: 'Intel Core i5 • 4GB RAM • 500GB HDD • 15.6" HD',
+                condition: 'Excellent condition',
+                features: ['Student Friendly', 'Lightweight', 'Affordable', 'DVD Drive', 'Numeric Keypad'],
+                detailedSpecs: {
+                    processor: 'Intel Core i5-7200U (7th Gen)',
+                    ram: '4GB DDR4',
+                    storage: '500GB HDD',
+                    graphics: 'Intel HD Graphics 620',
+                    display: '15.6" HD (1366x768)',
+                    os: 'Windows 10 Pro',
+                    battery: '4-cell, 40Wh',
+                    weight: '2.1 kg',
+                    ports: 'USB 3.0, USB 2.0, HDMI, Ethernet',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'StudentLife', rating: 4, comment: 'Perfect for university work and light gaming.' },
+                    { user: 'OfficeUser', rating: 5, comment: 'Reliable for daily office tasks.' }
+                ]
             },
             {
-                id: 'hp-spectre-x360',
-                name: 'HP Spectre x360',
-                price: 6299,
-                image: 'assets/images/laptops/hp-spectre-x360.jpg',
-                specs: 'Intel Core i5-1135G7 • 8GB RAM • 256GB SSD • 13.5" Touch • Windows 11',
-                condition: 'Very Good - Light use, excellent condition',
-                features: ['2-in-1 Convertible', 'Pen Support', 'Bang & Olufsen Audio', 'IR Camera']
+                id: 'dell-latitude-e7440',
+                name: 'Dell Latitude E7440',
+                price: 3000,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.08 (1).jpeg',
+                specs: 'Intel Core i5 (4th Gen) • 4GB RAM • 14" HD • Business Grade',
+                condition: 'Excellent condition',
+                features: ['Business Grade', 'Durable', 'Professional', 'Smart Card Reader', 'ExpressSign-in'],
+                detailedSpecs: {
+                    processor: 'Intel Core i5-4300M (4th Gen)',
+                    ram: '4GB DDR3',
+                    storage: '320GB HDD',
+                    graphics: 'Intel HD Graphics 4600',
+                    display: '14" HD (1366x768) Anti-Glare',
+                    os: 'Windows 10 Pro',
+                    battery: '6-cell, 65Wh',
+                    weight: '1.9 kg',
+                    ports: 'USB 3.0, VGA, HDMI, Smart Card, ExpressCard',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'BusinessPro', rating: 5, comment: 'Excellent build quality, still runs smoothly.' },
+                    { user: 'RemoteWorker', rating: 4, comment: 'Great for business applications.' }
+                ]
             },
             {
-                id: 'lenovo-thinkpad-x1',
-                name: 'Lenovo ThinkPad X1',
-                price: 7299,
-                image: 'assets/images/laptops/lenovo-thinkpad-x1.jpg',
-                specs: 'Intel Core i5-1145G7 • 16GB RAM • 512GB SSD • 14" FHD • Windows 11 Pro',
-                condition: 'Excellent - Business grade, well maintained',
-                features: ['Military Durability', 'ThinkShutter', 'Dolby Audio', 'Rapid Charge']
+                id: 'dell-latitude-e5470-1',
+                name: 'Dell Latitude E5470',
+                price: 3100,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.08 (2).jpeg',
+                specs: 'Intel Core i5 (6th Gen) • 4GB RAM • 15.6" FHD • Professional',
+                condition: 'Excellent condition',
+                features: ['Reliable Performance', 'Compact Design', 'Value for Money', 'TPM Security', 'Contacted SmartCard'],
+                detailedSpecs: {
+                    processor: 'Intel Core i5-6300U (6th Gen)',
+                    ram: '4GB DDR4',
+                    storage: '500GB HDD',
+                    graphics: 'Intel HD Graphics 520',
+                    display: '15.6" FHD (1920x1080) Anti-Glare',
+                    os: 'Windows 10 Pro',
+                    battery: '6-cell, 68Wh',
+                    weight: '2.1 kg',
+                    ports: 'USB 3.0, USB-C, HDMI, VGA, Smart Card',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'ITManager', rating: 5, comment: 'Solid business laptop, good value.' },
+                    { user: 'Consultant', rating: 4, comment: 'Reliable for client work.' }
+                ]
             },
             {
-                id: 'asus-rog-zephyrus',
-                name: 'ASUS ROG Zephyrus',
-                price: 11999,
-                image: 'assets/images/laptops/asus-rog-zephyrus.jpg',
-                specs: 'AMD Ryzen 7 • 16GB RAM • 1TB SSD • RTX 3060 • 15.6" QHD • Windows 11',
-                condition: 'Good - Gaming laptop, performance tested',
-                features: ['NVIDIA RTX 3060', '144Hz Display', 'RGB Keyboard', 'Advanced Cooling']
+                id: 'dell-inspiron-core-i3',
+                name: 'Dell Inspiron Core i3',
+                price: 3100,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.08.jpeg',
+                specs: 'Intel Core i3-6100U • 6GB RAM • 64-bit • Touch Screen • 15.6" HD',
+                condition: 'Excellent condition',
+                features: ['Touch Screen', 'Versatile', 'Budget Friendly', 'DVD Writer', 'Wave MaxxAudio'],
+                detailedSpecs: {
+                    processor: 'Intel Core i3-6100U (6th Gen)',
+                    ram: '6GB DDR4',
+                    storage: '1TB HDD',
+                    graphics: 'Intel HD Graphics 520',
+                    display: '15.6" HD Touch (1366x768)',
+                    os: 'Windows 10 Home',
+                    battery: '4-cell, 40Wh',
+                    weight: '2.3 kg',
+                    ports: 'USB 3.0, USB 2.0, HDMI, SD Card',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'HomeUser', rating: 4, comment: 'Great touch screen for browsing and media.' },
+                    { user: 'Student', rating: 5, comment: 'Perfect for schoolwork and entertainment.' }
+                ]
             },
             {
-                id: 'microsoft-surface-laptop',
-                name: 'Microsoft Surface Laptop',
-                price: 8999,
-                image: 'assets/images/laptops/microsoft-surface-laptop.jpg',
-                specs: 'Intel Core i5 • 8GB RAM • 256GB SSD • 13.5" Touch • Windows 11',
-                condition: 'Like New - Minimal use, pristine condition',
-                features: ['Alcantara Keyboard', 'Touch Display', 'Windows Hello', 'Surface Pen']
+                id: 'lenovo-amd-gaming',
+                name: 'Lenovo AMD Gaming',
+                price: 3799,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.09 (1).jpeg',
+                specs: 'AMD Ryzen 5 • 4GB RAM • 9th Gen • 15.6" FHD • Radeon Graphics',
+                condition: 'Excellent condition',
+                features: ['Gaming Ready', 'AMD Power', 'Great Performance', 'RGB Keyboard', 'Cooling System'],
+                detailedSpecs: {
+                    processor: 'AMD Ryzen 5 3550H (2nd Gen)',
+                    ram: '4GB DDR4',
+                    storage: '256GB SSD',
+                    graphics: 'AMD Radeon RX 560X 4GB',
+                    display: '15.6" FHD (1920x1080) IPS',
+                    os: 'Windows 10 Home',
+                    battery: '3-cell, 45Wh',
+                    weight: '2.2 kg',
+                    ports: 'USB 3.1, HDMI, USB-C, Ethernet',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'GamerDude', rating: 5, comment: 'Awesome gaming performance on a budget!' },
+                    { user: 'TechEnthusiast', rating: 4, comment: 'Good AMD setup for gaming and work.' }
+                ]
             },
             {
-                id: 'acer-swift-3',
-                name: 'Acer Swift 3',
-                price: 5499,
-                image: 'assets/images/laptops/acer-swift-3.jpg',
-                specs: 'AMD Ryzen 5 • 8GB RAM • 512GB SSD • 14" FHD • Windows 11',
-                condition: 'Very Good - Lightweight, excellent battery',
-                features: ['AMD Ryzen 5', 'Fingerprint Reader', 'Backlit KB', 'Fast Charging']
-            },
-            {
-                id: 'razer-blade-15',
-                name: 'Razer Blade 15',
-                price: 13999,
-                image: 'assets/images/laptops/razer-blade-15.jpg',
-                specs: 'Intel Core i7 • 16GB RAM • 1TB SSD • RTX 3070 • 15.6" QHD • Windows 11',
-                condition: 'Good - Gaming laptop, fully tested',
-                features: ['CNC Aluminum', 'Per-key RGB', 'Vapor Chamber', 'Thunderbolt 4']
-            },
-            {
-                id: 'samsung-galaxy-book',
-                name: 'Samsung Galaxy Book',
-                price: 6899,
-                image: 'assets/images/laptops/samsung-galaxy-book.jpg',
-                specs: 'Intel Core i5 • 8GB RAM • 512GB SSD • 15.6" FHD • Windows 11',
-                condition: 'Excellent - Business laptop, like new',
-                features: ['Samsung Ecosystem', 'Fast Charging', 'Num Pad', 'Slim Design']
-            },
-            {
-                id: 'lg-gram-17',
-                name: 'LG Gram 17',
-                price: 9999,
-                image: 'assets/images/laptops/lg-gram-17.jpg',
-                specs: 'Intel Core i7 • 16GB RAM • 1TB SSD • 17" WQXGA • Windows 11',
-                condition: 'Like New - Ultra-light, barely used',
-                features: ['Ultra Lightweight', 'Military Durability', 'Long Battery', 'Num Pad']
+                id: 'dell-latitude-e5470-2',
+                name: 'Dell Latitude E5470',
+                price: 3100,
+                image: 'assets/images/laptops/WhatsApp Image 2026-04-08 at 19.22.09.jpeg',
+                specs: 'Intel Core i5 (6th Gen) • 4GB RAM • 15.6" FHD • Business Reliable',
+                condition: 'Excellent condition',
+                features: ['Business Reliable', 'Long Battery Life', 'Affordable', 'ExpressSign-in', 'SafeID'],
+                detailedSpecs: {
+                    processor: 'Intel Core i5-6300U (6th Gen)',
+                    ram: '4GB DDR4',
+                    storage: '500GB HDD',
+                    graphics: 'Intel HD Graphics 520',
+                    display: '15.6" FHD (1920x1080) Anti-Glare',
+                    os: 'Windows 10 Pro',
+                    battery: '6-cell, 68Wh',
+                    weight: '2.1 kg',
+                    ports: 'USB 3.0, USB-C, HDMI, VGA, Smart Card',
+                    warranty: '30 days'
+                },
+                reviews: [
+                    { user: 'CorporateUser', rating: 5, comment: 'Excellent battery life and reliability.' },
+                    { user: 'Freelancer', rating: 4, comment: 'Good for business and light creative work.' }
+                ]
             }
         ];
     }
@@ -305,6 +286,7 @@ class GadgetNexus {
         this.products.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card slide-up';
+            productCard.setAttribute('data-product', product.id);
             productCard.innerHTML = `
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.name}" onerror="this.src='assets/images/placeholder.jpg'">
@@ -314,10 +296,9 @@ class GadgetNexus {
                     <p class="product-specs">${product.specs.split('•').slice(0, 3).join('•')}</p>
                     <div class="product-price">R${product.price}</div>
                     <div class="product-actions">
-                        <button class="btn btn-primary add-to-cart" 
-                                data-product="${product.name}" 
-                                data-price="${product.price}">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        <button class="btn btn-primary get-quote-btn" 
+                                data-product="${product.name}">
+                            <i class="fab fa-whatsapp"></i> Get Quote
                         </button>
                         <button class="btn btn-outline info-btn" 
                                 data-product="${product.id}">
@@ -328,23 +309,31 @@ class GadgetNexus {
             `;
             productsGrid.appendChild(productCard);
         });
-
-        this.attachProductEvents();
     }
 
     attachProductEvents() {
-        // Add to cart buttons
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
+        // Get Quote buttons
+        document.querySelectorAll('.get-quote-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const product = e.target.closest('.add-to-cart').dataset.product;
-                const price = e.target.closest('.add-to-cart').dataset.price;
-                this.addToCart(product, price);
+                e.stopPropagation();
+                const product = e.target.closest('.get-quote-btn').dataset.product;
+                this.redirectToWhatsApp(product);
+            });
+        });
+
+        // Product card click opens detail modal
+        document.querySelectorAll('.product-card[data-product]').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('button')) return;
+                const productId = card.dataset.product;
+                this.showProductInfo(productId);
             });
         });
 
         // Info buttons
         document.querySelectorAll('.info-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const productId = e.target.closest('.info-btn').dataset.product;
                 this.showProductInfo(productId);
             });
@@ -384,14 +373,14 @@ class GadgetNexus {
 
             if (priceRange !== 'all') {
                 switch (priceRange) {
-                    case '2000-5000':
-                        matchesPrice = productPrice >= 2000 && productPrice <= 5000;
+                    case '2000-2500':
+                        matchesPrice = productPrice >= 2000 && productPrice <= 2500;
                         break;
-                    case '5000-10000':
-                        matchesPrice = productPrice >= 5000 && productPrice <= 10000;
+                    case '2500-3000':
+                        matchesPrice = productPrice >= 2500 && productPrice <= 3000;
                         break;
-                    case '10000+':
-                        matchesPrice = productPrice >= 10000;
+                    case '3000+':
+                        matchesPrice = productPrice >= 3000;
                         break;
                 }
             }
@@ -428,19 +417,33 @@ class GadgetNexus {
 
         if (!product || !modal || !modalContent) return;
 
+        const specsList = Object.entries(product.detailedSpecs).map(([key, value]) => 
+            `<li><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value}</li>`
+        ).join('');
+
+        const reviewsHtml = product.reviews.map(review => 
+            `<div class="review-item">
+                <div class="review-header">
+                    <span class="review-user">${review.user}</span>
+                    <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                </div>
+                <p class="review-comment">${review.comment}</p>
+            </div>`
+        ).join('');
+
         modalContent.innerHTML = `
             <h2>${product.name}</h2>
-            <div class="product-modal-image">
-                <img src="${product.image}" alt="${product.name}" onerror="this.src='assets/images/placeholder.jpg'">
-            </div>
             <div class="product-modal-details">
                 <div class="detail-section">
-                    <h3>Specifications</h3>
-                    <p>${product.specs}</p>
+                    <h3>Key Specifications</h3>
+                    <ul class="specs-list">
+                        ${specsList}
+                    </ul>
                 </div>
                 <div class="detail-section">
-                    <h3>Condition</h3>
-                    <p>${product.condition}</p>
+                    <h3>Condition & Warranty</h3>
+                    <p><strong>Condition:</strong> ${product.condition}</p>
+                    <p><strong>Warranty:</strong> ${product.detailedSpecs.warranty}</p>
                 </div>
                 <div class="detail-section">
                     <h3>Key Features</h3>
@@ -449,15 +452,14 @@ class GadgetNexus {
                     </ul>
                 </div>
                 <div class="detail-section">
-                    <h3>Warranty</h3>
-                    <p>30 Days Comprehensive Warranty Included</p>
+                    <h3>Customer Reviews</h3>
+                    <div class="reviews-container">
+                        ${reviewsHtml}
+                    </div>
                 </div>
                 <div class="product-modal-actions">
-                    <button class="btn btn-primary" onclick="gadgetNexus.addToCart('${product.name}', ${product.price}); gadgetNexus.closeModal();">
-                        <i class="fas fa-cart-plus"></i> Add to Cart - R${product.price}
-                    </button>
-                    <button class="btn btn-secondary" onclick="gadgetNexus.sendSingleQuote('${product.name}', ${product.price})">
-                        <i class="fas fa-paper-plane"></i> Get Quote
+                    <button class="btn btn-primary" onclick="gadgetNexus.redirectToWhatsApp('${product.name}'); gadgetNexus.closeModal();">
+                        <i class="fab fa-whatsapp"></i> Get Custom Quote
                     </button>
                 </div>
             </div>
@@ -508,28 +510,6 @@ class GadgetNexus {
             form.style.display = 'block';
             success.style.display = 'none';
         }, 5000);
-    }
-
-    // Quote System
-    sendQuoteRequest() {
-        if (this.cart.length === 0) {
-            this.showNotification('Your cart is empty!');
-            return;
-        }
-
-        const subject = "Laptop Quote Request - Gadget Nexus";
-        const items = this.cart.map(item => `${item.name} (Qty: ${item.quantity}) - R${item.price * item.quantity}`).join('%0A');
-        const body = `Hello Gadget Nexus,%0A%0AI'm interested in getting a quote for the following laptops:%0A%0A${items}%0A%0APlease provide me with more information and availability.%0A%0ABest regards,%0A[Your Name]`;
-        
-        window.location.href = `mailto:mahlatsimashifane@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
-    }
-
-    sendSingleQuote(productName, productPrice) {
-        const subject = "Laptop Quote Request - Gadget Nexus";
-        const body = `Hello Gadget Nexus,%0A%0AI'm interested in getting a quote for:%0A%0A${productName} - R${productPrice}%0A%0APlease provide me with more information and availability.%0A%0ABest regards,%0A[Your Name]`;
-        
-        window.location.href = `mailto:mahlatsimashifane@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
-        this.closeModal();
     }
 
     sendServiceQuote(serviceName) {
@@ -598,8 +578,8 @@ class GadgetNexus {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--gradient-gold);
-            color: var(--black);
+            background: var(--gradient-cyan);
+            color: var(--dark-blue);
             padding: 1rem 2rem;
             border-radius: 10px;
             z-index: 1000;
@@ -633,7 +613,7 @@ window.gadgetNexus = gadgetNexus;
 
 // WhatsApp integration
 function openWhatsAppCatalog() {
-    window.open('https://wa.me/c/27719679307', '_blank');
+    window.open('https://wa.me/27812668996', '_blank');
 }
 
 // Order Now buttons (for products.html)

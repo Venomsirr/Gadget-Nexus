@@ -25,27 +25,27 @@
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
-                <div class="cart-icon" id="cartIcon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </div>
             </div>
         </div>
     </nav>
 
     <section class="products-page">
         <div class="container">
-            <h1 class="page-title fly-in">Our Premium Laptop Collection</h1>
-            <p class="page-subtitle slide-up">Discover expertly refurbished laptops with warranty</p>
+            <h1 class="page-title fly-in">Affordable Laptops for Gauteng</h1>
+            <p class="page-subtitle slide-up">Quality refurbished laptops starting from R2,200 with full warranty</p>
 
             <div class="products-filter">
                 <input type="text" id="searchInput" placeholder="Search laptops..." class="search-input">
                 <select id="priceFilter" class="filter-select">
                     <option value="all">All Prices</option>
-                    <option value="2000-5000">R2,000 - R5,000</option>
-                    <option value="5000-10000">R5,000 - R10,000</option>
-                    <option value="10000+">R10,000+</option>
+                    <option value="2000-2500">R2,000 - R2,500</option>
+                    <option value="2500-3000">R2,500 - R3,000</option>
+                    <option value="3000+">R3,000+</option>
                 </select>
+            </div>
+
+            <div class="stock-disclaimer">
+                <p><i class="fas fa-info-circle"></i> <strong>Note:</strong> The laptops displayed are examples from our current stock. We have a wide variety of refurbished laptops available. Contact us for specific models, configurations, or if you need a laptop for school, work, graphic design, coding, or any other purpose.</p>
             </div>
 
             <div class="products-grid-full" id="productsGrid">
@@ -53,23 +53,6 @@
             </div>
         </div>
     </section>
-
-    <div class="watermark">Created by <strong>Mahlatsi Mashifane</strong> — <a class="wm-phone" href="tel:0812668996">081 266 8996</a></div>
-
-    <!-- Shopping Cart -->
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3>Your Cart</h3>
-            <button class="close-cart" id="closeCart">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-footer">
-            <div class="cart-total">Total: R<span id="cartTotal">0</span></div>
-            <button class="btn btn-primary" id="getQuoteBtn">
-                <i class="fas fa-paper-plane"></i> Get Quote
-            </button>
-        </div>
-    </div>
 
     <!-- Product Modal -->
     <div class="modal" id="productModal">
